@@ -9,8 +9,20 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Apis.AnalyticsData.v1beta" Version="1.68.0.3608" />
+    <PackageReference Include="Google.Apis.AnalyticsAdmin.v1beta" Version="1.68.0.3608" />
     <PackageReference Include="Google.Apis.Auth" Version="1.73.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <PackageReference Include="Google.Cloud.SecretManager.V1" Version="3.9.0" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
+    <PackageReference Include="System.Web.HttpUtility" Version="4.3.0" />
+    <PackageReference Include="Cronos" Version="0.8.4" />
+    <PackageReference Include="Npgsql" Version="8.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
+    <PackageReference Include="Confluent.Kafka" Version="2.5.3" />
+    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
+    <PackageReference Include="Google.Cloud.Firestore" Version="3.5.0" />
+    <PackageReference Include="Google.Cloud.BigQuery.V2" Version="3.6.0" />
   </ItemGroup>
 
 </Project>

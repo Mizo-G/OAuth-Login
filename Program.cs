@@ -1,8 +1,35 @@
+using OAuthLogin.Services;
+using OAuthLogin.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+// Register Database Context
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+
+// Register Google Analytics Services
+builder.Services.AddScoped<GoogleAnalyticsPermissionsService>();
+builder.Services.AddScoped<GoogleAnalyticsReportService>();
+builder.Services.AddScoped<GoogleSecretManagerService>();
+builder.Services.AddScoped<TokenDatabaseService>();
+
+// Register Kafka Services
+builder.Services.AddSingleton<KafkaProducerService>();
+builder.Services.AddSingleton<KafkaConsumerService>();
+builder.Services.AddHttpClient("KafkaHttpSink");
+builder.Services.AddHttpClient("KafkaJdbcSink");
+
+// Register Worker Services
+builder.Services.AddHostedService<AnalyticsWorkerService>();
+builder.Services.AddHostedService<KafkaAnalyticsWorkerService>();
+builder.Services.AddHostedService<KafkaHttpSinkWorkerService>();
+builder.Services.AddHostedService<KafkaDataProcessorWorkerService>();
+builder.Services.AddHostedService<KafkaJdbcSinkWorkerService>();
 
 var app = builder.Build();
 
@@ -14,28 +41,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.MapControllers();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
